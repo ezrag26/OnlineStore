@@ -14,5 +14,9 @@ module.exports = {
         exclude: /node_modules/
       }
     ]
+  },
+  devServer: {
+    publicPath: "/",
+    contentBase: "./public"
   }
 }
