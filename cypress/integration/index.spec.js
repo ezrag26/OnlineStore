@@ -9,7 +9,7 @@ describe('cart', () => {
   })
 
   it('shows cart tab', () => {
-    cy.contains(/[Cc]art/)
+    cy.contains(/Cart/i)
   })
 
   it('displays product info of products available', () => {
@@ -48,9 +48,9 @@ describe('cart', () => {
       ]
     })
 
-    cy.contains('Add To Cart').click()
+    cy.contains(/Add.*To.*Cart/i).click()
 
-    cy.contains(/^[Cc]art.*1.*/)
+    cy.contains(/^Cart.*1.*/i)
   })
 
   it('shows items in cart after clicking on cart button', () => {
@@ -66,8 +66,8 @@ describe('cart', () => {
       ]
     })
 
-    cy.contains('Add To Cart').click()
-    cy.contains(/^[Cc]art.*1.*/).click()
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/^Cart.*1.*/i).click()
 
     expectProduct({ product: 'Hockey Puck', price: '9.99' })
   })
@@ -85,8 +85,8 @@ describe('cart', () => {
       ]
     })
 
-    cy.contains(/^[Cc]art.*/).click()
-    cy.contains(/^[Aa]ll.*[Pp]roducts.*/).click()
+    cy.contains(/^Cart.*/i).click()
+    cy.contains(/^All.*Products.*/i).click()
 
     expectProduct({ product: 'Hockey Puck', price: '9.99' })
   })
@@ -104,11 +104,71 @@ describe('cart', () => {
       ]
     })
 
-    cy.contains('Add To Cart').click()
-    cy.contains(/^[Cc]art.*1.*/).click()
-    cy.contains('Remove From Cart').click()
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/^Cart.*1.*/i).click()
+    cy.contains(/Remove.*From.*Cart/i).click()
 
-    cy.contains(/^[Aa]ll.*[Pp]roducts.*/).click()
-    cy.contains(/^[Cc]art.*0.*/)
+    cy.contains(/^All.*Products.*/i).click()
+    cy.contains(/^Cart.*0.*/i)
+  })
+
+  it('displays quantities in.*stock for products', () => {
+    cy.server()
+    cy.route('/', {
+      body: [
+        {
+          product: 'Hockey Puck',
+          productId: `doesn't matter`,
+          price: '9.99',
+          currency: 'USD'
+        }
+      ]
+    })
+
+    cy.contains(/.*in.*stock.*/i)
+  })
+
+  it('increments quantity chosen for item if product of that id is already in the cart', () => {
+    cy.server()
+    cy.route('/', {
+      body: [
+        {
+          product: 'Hockey Puck',
+          productId: `doesn't matter`,
+          price: '9.99',
+          currency: 'USD'
+        }
+      ]
+    })
+
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/^Cart.*/i).click()
+    cy.contains(/Qty.*1/i)
+
+    cy.contains(/^All.*Products.*/i).click()
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/^Cart.*/i).click()
+    cy.contains(/Qty.*2/i)
+  })
+
+  it('decrements quantity chosen for item if product of that id is in the cart', () => {
+    cy.server()
+    cy.route('/', {
+      body: [
+        {
+          product: 'Hockey Puck',
+          productId: `doesn't matter`,
+          price: '9.99',
+          currency: 'USD'
+        }
+      ]
+    })
+
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/Add.*To.*Cart/i).click()
+    cy.contains(/^Cart.*/i).click()
+
+    cy.contains(/Remove.*From.*Cart/i).click()
+    cy.contains(/Qty.*1/i)
   })
 })

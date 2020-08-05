@@ -8,9 +8,12 @@ const Cart = ({ items, onClick }) => {
   return (
     <>
       {items.map(item =>
-        <div key={randomBits()}>
-          <div>{item.product} : {item.price}{item.currency}</div>
-          <button onClick={() => onClick(item.productId)}>Remove From Cart</button>
+        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+          <div>
+            <div>{item.product} : {item.price}{item.currency}</div>
+            <div>Qty: {item.qty}</div>
+          </div>
+          <button onClick={() => onClick(item.productId)}>Remove 1 From Cart</button>
         </div>
       )}
     </>
@@ -21,8 +24,11 @@ const AllProducts = ({ items, onClick }) => {
   return (
     <>
       {items.map(item =>
-        <div key={randomBits()}>
-          <div>{item.product} : {item.price}{item.currency}</div>
+        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+          <div>
+            <div>{item.product} : {item.price}{item.currency}</div>
+            <div>There are {item.qty} left in stock</div>
+          </div>
           <button onClick={() => onClick(item.productId)}>Add To Cart</button>
         </div>
       )}
@@ -36,21 +42,54 @@ const Index = () => {
       product: 'Hockey Puck',
       productId: '1',
       price: '9.99',
-      currency: 'USD'
+      currency: 'USD',
+      qty: 5
     },
     {
       product: 'Baseball',
       productId: '2',
       price: '5.99',
-      currency: 'USD'
+      currency: 'USD',
+      qty: 7
     }
   ]
   const [cart, setCart] = useState([])
   const [viewingCart, setViewingCart] = useState(false)
 
-  const addToCart = id => { setCart(cart => cart.concat(products.filter(item => item.productId === id)[0])) }
+  const addToCart = id => {
+    let exists = false
+    setCart(cart => {
+      const update = cart.map(item => {
+        if (item.productId === id) {
+          ++item.qty
 
-  const removeFromCart = id => { setCart(cart => cart.filter(item => item.productId !== id)) }
+          exists = true
+        }
+
+        return item
+      })
+
+      if (exists) return update
+
+      return [
+        ...cart,
+        products.reduce((item, { qty, ...p }) => {
+          return p.productId === id ? { ...p, qty: 1 } : item
+        }, {})
+      ]
+    })
+
+
+  }
+
+  const removeFromCart = id => {
+    setCart(cart => {
+      return cart.map(item => {
+        if (item.productId === id) --item.qty
+        return item
+      }).filter(item => item.qty !== 0)
+    })
+  }
 
   const setView = () => { setViewingCart(current => !current) }
 
@@ -65,7 +104,7 @@ const Index = () => {
         </>
           :
         <>
-          <button onClick={setView}>Cart ({cart.length})</button>
+          <button onClick={setView}>Cart ({cart.reduce((total, item) => total + item.qty, 0)})</button>
           <AllProducts items={products} onClick={id => addToCart(id)}/>
         </>
       }
