@@ -16,7 +16,7 @@ module.exports = {
     ]
   },
   devServer: {
-    publicPath: "/",
+    publicPath: "/dist",
     contentBase: "./public"
   }
 }
