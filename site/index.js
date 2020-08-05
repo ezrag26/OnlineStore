@@ -4,7 +4,7 @@ import { Header } from './Header'
 
 const randomBits = () => Math.random().toString(36).slice(2)
 
-const Cart = ({ items, onClick }) => {
+const Cart = ({ items, removeFromCart }) => {
   return (
     <>
       {items.map(item =>
@@ -13,14 +13,14 @@ const Cart = ({ items, onClick }) => {
             <div>{item.product} : {item.price}{item.currency}</div>
             <div>Qty: {item.qty}</div>
           </div>
-          <button onClick={() => onClick(item.productId)}>Remove 1 From Cart</button>
+          <button onClick={() => removeFromCart(item.productId)}>Remove 1 From Cart</button>
         </div>
       )}
     </>
   )
 }
 
-const AllProducts = ({ items, onClick }) => {
+const AllProducts = ({ items, addToCart }) => {
   return (
     <>
       {items.map(item =>
@@ -29,7 +29,7 @@ const AllProducts = ({ items, onClick }) => {
             <div>{item.product} : {item.price}{item.currency}</div>
             <div>There are {item.qty} left in stock</div>
           </div>
-          <button onClick={() => onClick(item.productId)}>Add To Cart</button>
+          <button onClick={() => addToCart(item.productId)}>Add To Cart</button>
         </div>
       )}
     </>
@@ -100,12 +100,12 @@ const Index = () => {
         viewingCart ?
         <>
           <button onClick={setView}>All Products</button>
-          <Cart items={cart} onClick={id => removeFromCart(id)}/>
+          <Cart items={cart} removeFromCart={id => removeFromCart(id)}/>
         </>
           :
         <>
           <button onClick={setView}>Cart ({cart.reduce((total, item) => total + item.qty, 0)})</button>
-          <AllProducts items={products} onClick={id => addToCart(id)}/>
+          <AllProducts items={products} addToCart={id => addToCart(id)}/>
         </>
       }
     </>
