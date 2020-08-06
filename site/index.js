@@ -8,12 +8,13 @@ const Cart = ({ items, removeFromCart }) => {
   return (
     <>
       {items.map(item =>
-        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 30px' }}>
           <div>
-            <div>{item.product} : {item.price}{item.currency}</div>
-            <div>Qty: {item.qty}</div>
+            <div style={{ fontSize: '1.5em' }}>{item.product}</div>
+            <div>Price: {item.price}{item.currency}</div>
+            <div>Qty: <span>{item.qty}</span></div>
           </div>
-          <button onClick={() => removeFromCart(item.productId)}>Remove 1 From Cart</button>
+          <button onClick={() => removeFromCart(item.productId)} style={{ backgroundColor: 'red' }}>Remove 1 From Cart</button>
         </div>
       )}
     </>
@@ -24,12 +25,13 @@ const AllProducts = ({ items, addToCart }) => {
   return (
     <>
       {items.map(item =>
-        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 30px' }}>
           <div>
-            <div>{item.product} : {item.price}{item.currency}</div>
-            <div>There are {item.qty} left in stock</div>
+            <div style={{ fontSize: '1.5em' }}>{item.product}</div>
+            <div>Price: {item.price}{item.currency}</div>
+            <div style={{ fontSize: '.7em' }}>There are <span>{item.qty}</span> left in stock</div>
           </div>
-          <button onClick={() => addToCart(item.productId)}>Add To Cart</button>
+          <button onClick={() => addToCart(item.productId)} style={{ backgroundColor: 'green' }}>Add To Cart</button>
         </div>
       )}
     </>
