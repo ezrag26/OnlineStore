@@ -46,7 +46,7 @@ describe('cart', () => {
     expectProduct({ product: 'Hockey Puck', price: '9.99' })
   })
 
-  it('has button to go back to all products in cart view', () => {
+  it('has a way to go back to all products from the cart view', () => {
     cy.contains(/^Cart.*/i).click()
     cy.contains(/Online.*Store.*/i).click()
 
