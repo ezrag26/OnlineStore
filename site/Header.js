@@ -1,10 +1,11 @@
 import React from 'react'
 
-export const Header = ({ onClick }) => {
+export const Header = ({ children }) => {
   return (
     <header>
-      <nav>
-      </nav>
+      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        {children}
+      </div>
     </header>
   )
 }

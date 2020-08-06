@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Header } from './Header'
+import { Cart } from './Cart'
 
 const randomBits = () => Math.random().toString(36).slice(2)
 
-const Cart = ({ items, removeFromCart }) => {
-  return (
-    <>
-      {items.map(item =>
-        <div key={randomBits()} style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 30px' }}>
-          <div>
-            <div style={{ fontSize: '1.5em' }}>{item.product}</div>
-            <div>Price: {item.price}{item.currency}</div>
-            <div>Qty: <span>{item.qty}</span></div>
-          </div>
-          <button onClick={() => removeFromCart(item.productId)} style={{ backgroundColor: 'red' }}>Remove 1 From Cart</button>
-        </div>
-      )}
-    </>
-  )
-}
-
-const AllProducts = ({ items, addToCart }) => {
+const Products = ({ items, addToCart }) => {
   return (
     <>
       {items.map(item =>
@@ -38,8 +22,8 @@ const AllProducts = ({ items, addToCart }) => {
   )
 }
 
-const Index = () => {
-  const products = [
+const fetchProducts = () => {
+  return [
     {
       product: 'Hockey Puck',
       productId: '1',
@@ -55,8 +39,24 @@ const Index = () => {
       qty: 7
     }
   ]
+}
+
+const Index = () => {
+  const [products, setProducts] = useState([])
   const [cart, setCart] = useState([])
   const [viewingCart, setViewingCart] = useState(false)
+  const [content, setContent] = useState(getProducts())
+
+  useEffect(() => {
+    if (!viewingCart) setProducts(fetchProducts())
+  }, [viewingCart])
+
+  useEffect(() => {
+    if (viewingCart) setContent(<Cart items={cart} removeFromCart={id => removeFromCart(id)}/>)
+    else setContent(getProducts())
+  }, [products, cart, viewingCart])
+
+  function getProducts() { return <Products items={products} addToCart={id => addToCart(id)}/> }
 
   const addToCart = id => {
     let exists = false
@@ -80,8 +80,6 @@ const Index = () => {
         }, {})
       ]
     })
-
-
   }
 
   const removeFromCart = id => {
@@ -93,23 +91,13 @@ const Index = () => {
     })
   }
 
-  const setView = () => { setViewingCart(current => !current) }
-
   return (
     <>
-      <Header />
-      {
-        viewingCart ?
-        <>
-          <button onClick={setView}>All Products</button>
-          <Cart items={cart} removeFromCart={id => removeFromCart(id)}/>
-        </>
-          :
-        <>
-          <button onClick={setView}>Cart ({cart.reduce((total, item) => total + item.qty, 0)})</button>
-          <AllProducts items={products} addToCart={id => addToCart(id)}/>
-        </>
-      }
+      <Header>
+        <h1 onClick={() => setViewingCart(false)}>Welcome to the Online Store!</h1>
+        <button onClick={() => setViewingCart(true)}>Cart ({cart.reduce((total, item) => total + item.qty, 0)})</button>
+      </Header>
+      {content}
     </>
   )
 }
