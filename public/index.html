@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Online Store</title>
+    <title>{{title}}</title>
     <link rel="icon" href="images/EG-transparent.png">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: auto
+        }
+    </style>
+    <script type="text/javascript">
+    const header = '{{header}}'
+    </script>
 </head>
 <body>
 
 <div id="root"></div>
 
-<script src="dist/main_bundle.js"></script>
+<script src="./dist/main_bundle.js"></script>
 </body>
 </html>

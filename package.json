@@ -2,10 +2,12 @@
   "name": "onlinestore",
   "version": "1.0.0",
   "description": "",
-  "main": "site/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "cypress open",
-    "dev-server": "webpack-dev-server --mode=development"
+    "dev-server": "webpack-dev-server --mode=development",
+    "run-server": "nodemon",
+    "watch-client": "webpack --mode development --watch",
+    "test": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -25,11 +27,15 @@
     "ava": "^3.11.1",
     "babel-loader": "^8.1.0",
     "cypress": "^4.12.0",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

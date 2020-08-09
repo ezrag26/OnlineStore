@@ -5,40 +5,27 @@ import { Cart } from './Cart'
 import { Products } from './Products'
 
 const fetchProducts = () => {
-  return [
-    {
-      product: 'Hockey Puck',
-      productId: '1',
-      price: '9.99',
-      currency: 'USD',
-      qty: 5
-    },
-    {
-      product: 'Baseball',
-      productId: '2',
-      price: '5.99',
-      currency: 'USD',
-      qty: 7
-    }
-  ]
+  return fetch('http://localhost:8080/products')
+    .then(res => res.json())
 }
 
 const Index = () => {
   const [products, setProducts] = useState([])
   const [cart, setCart] = useState([])
   const [viewingCart, setViewingCart] = useState(false)
-  const [content, setContent] = useState(getProducts())
+  const [content, setContent] = useState([])
 
   useEffect(() => {
-    if (!viewingCart) setProducts(fetchProducts())
+    if (!viewingCart) {
+      fetchProducts()
+        .then(products => setProducts(products))
+    }
   }, [viewingCart])
 
   useEffect(() => {
     if (viewingCart) setContent(<Cart items={cart} removeFromCart={id => removeFromCart(id)}/>)
-    else setContent(getProducts())
+    else setContent(<Products items={products} addToCart={id => addToCart(id)}/>)
   }, [products, cart, viewingCart])
-
-  function getProducts() { return <Products items={products} addToCart={id => addToCart(id)}/> }
 
   const addToCart = id => {
     let exists = false
@@ -76,8 +63,20 @@ const Index = () => {
   return (
     <>
       <Header>
-        <h1 onClick={() => setViewingCart(false)}>Welcome to the Online Store!</h1>
-        <button onClick={() => setViewingCart(true)}>Cart ({cart.reduce((total, item) => total + item.qty, 0)})</button>
+        <h1
+          style={{ cursor: 'pointer', padding: '.5rem' }}
+          onClick={() => setViewingCart(false)}
+          onMouseOver={e => e.target.style.color = 'rgba(0, 0, 0, .7)'}
+          onMouseOut={e => e.target.style.color = 'rgba(0, 0, 0, 1)'}
+        >{header}
+        </h1>
+        <div
+          style={{ margin: 'auto 0', cursor: 'pointer', padding: '.5rem' }}
+          onClick={() => setViewingCart(true)}
+          onMouseOver={e => e.target.style.color = 'rgba(0, 0, 0, .7)'}
+          onMouseOut={e => e.target.style.color = 'rgba(0, 0, 0, 1)'}
+        >Cart ({cart.reduce((total, item) => total + item.qty, 0)})
+        </div>
       </Header>
       {content}
     </>
